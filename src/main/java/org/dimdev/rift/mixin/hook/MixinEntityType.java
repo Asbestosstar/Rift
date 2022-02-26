@@ -35,7 +35,7 @@ public abstract class MixinEntityType {
         @Shadow private boolean summonable;
         private static final Logger LOGGER = LogManager.getLogger();
 
-        @Overwrite
+   /*     @Overwrite
         public EntityType<T> build(String id) {
             Type<?> dataFixerType = null;
 
@@ -48,6 +48,8 @@ public abstract class MixinEntityType {
             }
 
             return new EntityType<>(entityClass, factory, serializable, summonable, dataFixerType);
-        }
+            
+          
+        }  */
     }
 }

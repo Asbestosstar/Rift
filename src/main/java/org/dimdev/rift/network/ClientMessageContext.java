@@ -2,6 +2,7 @@ package org.dimdev.rift.network;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientAdvancementManager;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
@@ -10,6 +11,8 @@ import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.tags.NetworkTagManager;
+
+
 
 public class ClientMessageContext implements MessageContext {
     private final Minecraft client;
@@ -23,7 +26,7 @@ public class ClientMessageContext implements MessageContext {
     private final NBTQueryManager nbtQueryManager;
 
     public ClientMessageContext(
-            Minecraft client,
+    		Minecraft client,
             GameProfile profile,
             NetworkManager networkManager,
             RecipeManager recipeManager,
@@ -83,6 +86,6 @@ public class ClientMessageContext implements MessageContext {
 
     @Override
     public void reply(Message message) {
-        message.sendToServer();
+     //   message.sendToServer();
     }
 }

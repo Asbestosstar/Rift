@@ -1,14 +1,15 @@
 package org.dimdev.rift.mixin.core.client;
 
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
-import net.minecraft.client.renderer.entity.model.ModelBase;
-import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(LayerArmorBase.class)
-public class MixinLayerArmorBase<T extends ModelBase> {
+import net.minecraft.client.renderer.entity.layers.ArmorLayer;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.util.ResourceLocation;
+
+@Mixin(ArmorLayer.class)
+public class MixinLayerArmorBase<T extends Model> {
     @Redirect(
         method = "getArmorResource(Lnet/minecraft/item/ItemArmor;ZLjava/lang/String;)Lnet/minecraft/util/ResourceLocation;",
         at = @At(

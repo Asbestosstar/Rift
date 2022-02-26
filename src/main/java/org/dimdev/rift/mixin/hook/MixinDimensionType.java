@@ -14,9 +14,9 @@ public class MixinDimensionType {
     private static HashMap<Integer, DimensionType> dimensionTypes = new HashMap<>();
 
     static {
-        for (DimensionType dimensionType : DimensionType.values()) {
-            dimensionTypes.put(dimensionType.getId(), dimensionType);
-        }
+    //    for (DimensionType dimensionType : DimensionType.values()) {
+    //        dimensionTypes.put(dimensionType.getId(), dimensionType);
+    //    }
 
         for (DimensionTypeAdder dimensionTypeAdder : RiftLoader.instance.getListeners(DimensionTypeAdder.class)) {
             for (DimensionType dimensionType : dimensionTypeAdder.getDimensionTypes()) {

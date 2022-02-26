@@ -1,12 +1,5 @@
 package org.dimdev.rift.resources;
 
-import com.google.common.collect.Lists;
-import net.minecraft.resources.AbstractResourcePack;
-import net.minecraft.resources.ResourcePackType;
-import net.minecraft.util.ResourceLocation;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,11 +7,32 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.NotDirectoryException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
-public class ModPack extends AbstractResourcePack {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.resources.ResourcePack;
+import net.minecraft.resources.ResourcePackType;
+import net.minecraft.util.ResourceLocation;
+
+public class ModPack extends ResourcePack {
     private final String root;
     private final String name;
     private Logger LOGGER = LogManager.getLogger();

@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixesManager;
 import net.minecraft.util.datafix.TypeReferences;
-import net.minecraft.util.registry.RegistryNamespaced;
 import org.apache.logging.log4j.Logger;
 import org.dimdev.rift.listener.TileEntityTypeAdder;
 import org.dimdev.riftloader.RiftLoader;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TileEntityType.class)
 public abstract class MixinTileEntityType {
     @Shadow @Final private static Logger LOGGER;
-    @Shadow @Final public static RegistryNamespaced<ResourceLocation, TileEntityType<?>> REGISTRY;
+   // @Shadow @Final public static SimpleRegistry<ResourceLocation, TileEntityType<?>> REGISTRY;
 
     @Overwrite
     public static <T extends TileEntity> TileEntityType<T> registerTileEntityType(String id, TileEntityType.Builder<T> builder) {
@@ -35,7 +34,7 @@ public abstract class MixinTileEntityType {
         }
 
         TileEntityType<T> tileEntityType = builder.build(dataFixerType);
-        REGISTRY.put(new ResourceLocation(id), tileEntityType);
+     //   REGISTRY.put(new ResourceLocation(id), tileEntityType);
         return tileEntityType;
     }
 

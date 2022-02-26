@@ -1,12 +1,12 @@
 package org.dimdev.rift.listener;
 
-import net.minecraft.network.EnumConnectionState;
-import net.minecraft.network.EnumPacketDirection;
-import net.minecraft.network.Packet;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketDirection;
+import net.minecraft.network.ProtocolType;
 
 public interface PacketAdder {
     interface PacketRegistrationReceiver {
-        EnumConnectionState registerPacket(EnumPacketDirection direction, Class<? extends Packet<?>> packetClass);
+    	ProtocolType registerPacket(PacketDirection direction, Class<? extends IPacket<?>> packetClass);
     }
 
     void registerHandshakingPackets(PacketRegistrationReceiver receiver);

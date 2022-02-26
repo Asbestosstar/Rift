@@ -1,25 +1,28 @@
 package org.dimdev.rift.network;
 
-import io.netty.buffer.Unpooled;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.EnumPacketDirection;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.network.play.server.SPacketCustomPayload;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.RegistryNamespaced;
-import net.minecraft.world.WorldServer;
-
 import java.util.function.Predicate;
 
+import io.netty.buffer.Unpooled;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerModelPart;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.IPacket;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.PacketDirection;
+import net.minecraft.network.play.client.CCustomPayloadPacket;
+import net.minecraft.network.play.server.SCustomPayloadPlayPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
+
 public abstract class Message {
-    public static final RegistryNamespaced<ResourceLocation, Class<? extends Message>> REGISTRY = new RegistryNamespaced<>();
+	//   public static final MutableRegistry<MutableRegistry<?>, Class<? extends Message>> REGISTRY = new SimpleRegistry<>();
+
+//    public static final MutableRegistry<ResourceLocation, Class<? extends Message>> REGISTRY = new MutableRegistry<>();
 
     public abstract void write(PacketBuffer buffer);
 
@@ -33,61 +36,63 @@ public abstract class Message {
         throw new UnsupportedOperationException("Packet " + getClass() + " can't be processed on server.");
     }
 
-    public final Packet<? extends INetHandler> toPacket(EnumPacketDirection direction) {
-        ResourceLocation id = Message.REGISTRY.getKey(getClass());
-        if (id == null) {
-            throw new IllegalArgumentException("Message was not registered: " + this);
-        }
+//    public final IPacket<? extends INetHandler> toPacket(PacketDirection direction) {
+//        ResourceLocation id = Message.REGISTRY.getKey(getClass());
+   //     if (id == null) {
+ //           throw new IllegalArgumentException("Message was not registered: " + this);
+ //       }
 
-        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+  /*      PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
         write(buffer);
         switch (direction) {
             case CLIENTBOUND:
-                return new SPacketCustomPayload(id, buffer);
+                return new SCustomPayloadPlayPacket(id, buffer);
             case SERVERBOUND:
-                return new CPacketCustomPayload(id, buffer);
+                return new CCustomPayloadPacket(id, buffer);
             default:
                 throw new AssertionError("unreachable");
         }
     }
 
-    public final void send(EntityPlayer player) {
-        if (player instanceof EntityPlayerMP) {
-            ((EntityPlayerMP) player).connection.getNetworkManager().sendPacket(toPacket(EnumPacketDirection.CLIENTBOUND));
-        } else if (player instanceof EntityPlayerSP) {
-            ((EntityPlayerSP) player).connection.getNetworkManager().sendPacket(toPacket(EnumPacketDirection.SERVERBOUND));
+    public final void send(PlayerEntity player) {
+        if (player instanceof PlayerModelPart) {
+            ((PlayerModelPart) player).connection.getNetworkManager().sendPacket(toPacket(PacketDirection.CLIENTBOUND));
+        } else if (player instanceof ClientPlayerEntity) {
+            ((ClientPlayerEntity) player).connection.getNetworkManager().sendPacket(toPacket(PacketDirection.SERVERBOUND));
         } else {
-            throw new IllegalArgumentException("Only supported for EntityPlayerMP and EntityPlayerSP, but got " + player.getClass());
+            throw new IllegalArgumentException("Only supported for PlayerModelPart and ClientPlayerEntity, but got " + player.getClass());
         }
     }
 
     public final void sendToAll(MinecraftServer server) {
-        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
+        for (PlayerModelPart player : server.getPlayerList().getPlayers()) {
             send(player);
         }
     }
 
-    public final void sendToAll(MinecraftServer server, Predicate<EntityPlayerMP> filter) {
-        for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
+    public final void sendToAll(MinecraftServer server, Predicate<PlayerModelPart> filter) {
+        for (PlayerModelPart player : server.getPlayerList().getPlayers()) {
             if (filter.test(player)) {
                 send(player);
             }
         }
     }
 
-    public final void sendToAll(WorldServer world, Predicate<EntityPlayerMP> filter) {
-        for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, filter)) {
+    public final void sendToAll(WorldServer world, Predicate<PlayerModelPart> filter) {
+        for (PlayerModelPart player : world.getPlayers(PlayerModelPart.class, filter)) {
             send(player);
         }
     }
 
     public final void sendToAll(WorldServer world) {
-        for (EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, player -> true)) {
+        for (PlayerModelPart player : world.getPlayers(PlayerModelPart.class, player -> true)) {
             send(player);
         }
     }
 
     public void sendToServer() {
-        Minecraft.getInstance().player.connection.sendPacket(toPacket(EnumPacketDirection.SERVERBOUND));
+        Minecraft.getInstance().player.connection.sendPacket(toPacket(PacketDirection.SERVERBOUND));
     }
+*/
 }
+
