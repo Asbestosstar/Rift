@@ -8,7 +8,7 @@ public class MessageRegistrator implements BootstrapListener {
     @Override
     public void afterVanillaBootstrap() {
         for (MessageAdder messageAdder : RiftLoader.instance.getListeners(MessageAdder.class)) {
-            messageAdder.registerMessages(Message.REGISTRY);
+       //     messageAdder.registerMessages(Message.REGISTRY);
         }
     }
 }

@@ -1,15 +1,9 @@
 package org.dimdev.rift.mixin.hook.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.MusicTicker;
-import net.minecraft.client.resources.ResourcePackInfoClient;
-import net.minecraft.profiler.Profiler;
-import net.minecraft.resources.IPackFinder;
-import net.minecraft.resources.ResourcePackList;
-import org.dimdev.rift.listener.client.KeybindHandler;
+import org.dimdev.rift.listener.ResourcePackFinderAdder;
 import org.dimdev.rift.listener.client.AmbientMusicTypeProvider;
 import org.dimdev.rift.listener.client.ClientTickable;
-import org.dimdev.rift.listener.ResourcePackFinderAdder;
+import org.dimdev.rift.listener.client.KeybindHandler;
 import org.dimdev.riftloader.RiftLoader;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,9 +14,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.MusicTicker;
+import net.minecraft.client.resources.ClientResourcePackInfo;
+import net.minecraft.profiler.Profiler;
+import net.minecraft.resources.IPackFinder;
+import net.minecraft.resources.ResourcePackList;
+
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
-    @Shadow @Final private ResourcePackList<ResourcePackInfoClient> resourcePackRepository;
+    @Shadow @Final private ResourcePackList<ClientResourcePackInfo> resourcePackRepository;
     @Shadow @Final public Profiler profiler;
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/ResourcePackList;addPackFinder(Lnet/minecraft/resources/IPackFinder;)V", ordinal = 1))

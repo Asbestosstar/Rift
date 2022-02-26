@@ -1,10 +1,10 @@
 package org.dimdev.rift.listener;
 
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.gen.ChunkGeneratorType;
-import net.minecraft.world.gen.IChunkGenSettings;
-import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.IChunkGeneratorFactory;
 
 import javax.annotation.Nullable;
@@ -25,5 +25,5 @@ public interface ChunkGeneratorReplacer {
      * @return a custom chunk generator or {@code null} to fall back to vanilla chunk generator selection
      */
     @Nullable
-    <T extends IChunkGenSettings> IChunkGenerator<T> createChunkGenerator(WorldServer world, WorldType worldType, int dimensionID);
+    <T extends GenerationSettings> ChunkGenerator<T> createChunkGenerator(World world, WorldType worldType, int dimensionID);
 }

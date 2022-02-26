@@ -1,14 +1,15 @@
 package org.dimdev.rift.mixin.core.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.fluid.LavaFluid;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
 import org.dimdev.rift.injectedmethods.RiftFluid;
 import org.spongepowered.asm.mixin.Mixin;
+
+import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.fluid.LavaFluid;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 
 @Mixin(LavaFluid.class)
 public class MixinLavaFluid implements RiftFluid {

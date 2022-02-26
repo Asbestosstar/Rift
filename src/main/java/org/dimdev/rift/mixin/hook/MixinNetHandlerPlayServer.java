@@ -1,12 +1,5 @@
 package org.dimdev.rift.mixin.hook;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.CPacketCustomPayload;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import org.dimdev.rift.injectedmethods.RiftCPacketCustomPayload;
 import org.dimdev.rift.listener.CustomPayloadHandler;
 import org.dimdev.rift.network.Message;
@@ -19,15 +12,23 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(NetHandlerPlayServer.class)
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.IServerPlayNetHandler;
+import net.minecraft.network.play.client.CCustomPayloadPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+
+@Mixin(IServerPlayNetHandler.class)
 public class MixinNetHandlerPlayServer {
     @Shadow @Final private MinecraftServer server;
-    @Shadow public EntityPlayerMP player;
+    @Shadow public ServerPlayerEntity player;
     @Shadow @Final public NetworkManager netManager;
 
     @SuppressWarnings("deprecation")
     @Inject(method = "processCustomPayload", at = @At("HEAD"), cancellable = true)
-    private void handleModCustomPayload(CPacketCustomPayload packet, CallbackInfo ci) {
+    private void handleModCustomPayload(CCustomPayloadPacket packet, CallbackInfo ci) {
         ResourceLocation channelName = ((RiftCPacketCustomPayload) packet).getChannelName();
         PacketBuffer data = ((RiftCPacketCustomPayload) packet).getData();
 
@@ -37,7 +38,7 @@ public class MixinNetHandlerPlayServer {
             }
         }
 
-        Class<? extends Message> messageClass = Message.REGISTRY.get(channelName);
+ /*       Class<? extends Message> messageClass = Message.REGISTRY.get(channelName);
         if (messageClass != null) {
             try {
                 Message message = RiftLoader.instance.newInstance(messageClass);
@@ -47,6 +48,6 @@ public class MixinNetHandlerPlayServer {
                 throw new RuntimeException("Error creating " + messageClass, e);
             }
             ci.cancel();
-        }
+        }*/
     }
 }

@@ -1,32 +1,32 @@
 package org.dimdev.rift.mixin.core.client;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockStainedGlass;
-import net.minecraft.client.renderer.BlockFluidRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.init.Blocks;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.IWorldReaderBase;
 import org.dimdev.rift.injectedmethods.RiftFluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(BlockFluidRenderer.class)
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StainedGlassBlock;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.FluidBlockRenderer;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.IFluidState;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
+
+@Mixin(FluidBlockRenderer.class)
 public abstract class MixinBlockFluidRenderer {
-    @Shadow private static boolean isAdjacentFluidSameAs(IBlockReader world, BlockPos pos, EnumFacing side, IFluidState state) { return false; }
-    @Shadow private static boolean func_209556_a(IBlockReader p_209556_0_, BlockPos p_209556_1_, EnumFacing p_209556_2_, float p_209556_3_) { return false; }
-    @Shadow protected abstract float func_204504_a(IWorldReaderBase p_204504_1_, BlockPos p_204504_2_, Fluid p_204504_3_);
+    @Shadow private static boolean isAdjacentFluidSameAs(IBlockReader world, BlockPos pos, Direction side, IFluidState state) { return false; }
+    @Shadow private static boolean func_209556_a(IBlockReader p_209556_0_, BlockPos p_209556_1_, Direction p_209556_2_, float p_209556_3_) { return false; }
+    @Shadow protected abstract float func_204504_a(IWorldReader p_204504_1_, BlockPos p_204504_2_, Fluid p_204504_3_);
     @Shadow protected abstract int func_204835_a(IWorldReader p_204835_1_, BlockPos p_204835_2_);
     @Shadow private TextureAtlasSprite atlasSpriteWaterOverlay;
 
@@ -35,8 +35,8 @@ public abstract class MixinBlockFluidRenderer {
         boolean isLava = state.isTagged(FluidTags.LAVA);
 
         // Get textures and color multiplier
-        TextureAtlasSprite stillTexture = MissingTextureSprite.getSprite();
-        TextureAtlasSprite flowingTexture = MissingTextureSprite.getSprite();
+        TextureAtlasSprite stillTexture = MissingTextureSprite.func_217790_a();   //May not work
+        TextureAtlasSprite flowingTexture = MissingTextureSprite.func_217790_a();  //May not work
         int colorMultiplier = 0xFFFFFF;
         if (state.getFluid() instanceof RiftFluid) {
             RiftFluid fluid = (RiftFluid) state.getFluid();
@@ -49,12 +49,12 @@ public abstract class MixinBlockFluidRenderer {
         float greenMultiplier = (colorMultiplier >> 8 & 255) / 255F;
         float blueMultiplier = (colorMultiplier & 255) / 255F;
 
-        boolean renderTop = !isAdjacentFluidSameAs(world, pos, EnumFacing.UP, state);
-        boolean renderBottom = !isAdjacentFluidSameAs(world, pos, EnumFacing.DOWN, state) && !func_209556_a(world, pos, EnumFacing.DOWN, 0.8888889F);
-        boolean renderNorth = !isAdjacentFluidSameAs(world, pos, EnumFacing.NORTH, state);
-        boolean renderSouth = !isAdjacentFluidSameAs(world, pos, EnumFacing.SOUTH, state);
-        boolean renderWest = !isAdjacentFluidSameAs(world, pos, EnumFacing.WEST, state);
-        boolean renderEast = !isAdjacentFluidSameAs(world, pos, EnumFacing.EAST, state);
+        boolean renderTop = !isAdjacentFluidSameAs(world, pos, Direction.UP, state);
+        boolean renderBottom = !isAdjacentFluidSameAs(world, pos, Direction.DOWN, state) && !func_209556_a(world, pos, Direction.DOWN, 0.8888889F);
+        boolean renderNorth = !isAdjacentFluidSameAs(world, pos, Direction.NORTH, state);
+        boolean renderSouth = !isAdjacentFluidSameAs(world, pos, Direction.SOUTH, state);
+        boolean renderWest = !isAdjacentFluidSameAs(world, pos, Direction.WEST, state);
+        boolean renderEast = !isAdjacentFluidSameAs(world, pos, Direction.EAST, state);
 
         if (!renderTop && !renderBottom && !renderEast && !renderWest && !renderNorth && !renderSouth) {
             return false;
@@ -77,7 +77,7 @@ public abstract class MixinBlockFluidRenderer {
         float maxV;
         float var34;
 
-        if (renderTop && !func_209556_a(world, pos, EnumFacing.UP, Math.min(Math.min(var17, var18), Math.min(var19, var20)))) {
+        if (renderTop && !func_209556_a(world, pos, Direction.UP, Math.min(Math.min(var17, var18), Math.min(var19, var20)))) {
             rendered = true;
             var17 -= 0.001F;
             var18 -= 0.001F;
@@ -156,7 +156,7 @@ public abstract class MixinBlockFluidRenderer {
             double z1;
             double x2;
             double z2;
-            EnumFacing side;
+            Direction side;
             boolean render;
             if (direction == 0) {
                 maxU = var17;
@@ -165,7 +165,7 @@ public abstract class MixinBlockFluidRenderer {
                 x2 = x + 1;
                 z1 = z + 0.001;
                 z2 = z + 0.001;
-                side = EnumFacing.NORTH;
+                side = Direction.NORTH;
                 render = renderNorth;
             } else if (direction == 1) {
                 maxU = var19;
@@ -174,7 +174,7 @@ public abstract class MixinBlockFluidRenderer {
                 x2 = x;
                 z1 = z + 1 - 0.001;
                 z2 = z + 1 - 0.001;
-                side = EnumFacing.SOUTH;
+                side = Direction.SOUTH;
                 render = renderSouth;
             } else if (direction == 2) {
                 maxU = var18;
@@ -183,7 +183,7 @@ public abstract class MixinBlockFluidRenderer {
                 x2 = x + 0.001;
                 z1 = z + 1;
                 z2 = z;
-                side = EnumFacing.WEST;
+                side = Direction.WEST;
                 render = renderWest;
             } else {
                 maxU = var20;
@@ -192,7 +192,7 @@ public abstract class MixinBlockFluidRenderer {
                 x2 = x + 1 - 0.001;
                 z1 = z;
                 z2 = z + 1;
-                side = EnumFacing.EAST;
+                side = Direction.EAST;
                 render = renderEast;
             }
 
@@ -202,7 +202,7 @@ public abstract class MixinBlockFluidRenderer {
                 TextureAtlasSprite texture = flowingTexture;
                 if (!isLava) {
                     Block var57 = world.getBlockState(var55).getBlock();
-                    if (var57 == Blocks.GLASS || var57 instanceof BlockStainedGlass) {
+                    if (var57 == Blocks.GLASS || var57 instanceof StainedGlassBlock) {
                         texture = atlasSpriteWaterOverlay;
                     }
                 }
